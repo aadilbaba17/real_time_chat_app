@@ -15,7 +15,7 @@ const MessageContainer = () => {
 	// }, [setSelectedConversation]);
 
 	return (
-		<div className="flex flex-col h-screen w-full ">
+		<div className="flex flex-col h-screen w-full  overflow-hidden ">
 			{!selectedConversation ? (
 				<Home />
 			) : (
@@ -32,7 +32,7 @@ const MessageContainer = () => {
 					
 
 					{/* Message Input - fixed at the bottom */}
-					<div className="sticky bottom-0 bg-white w-full z-10">
+					<div className="sticky bottom-0  w-full z-10">
 						<MessageInput />
 					</div>
 				</>
