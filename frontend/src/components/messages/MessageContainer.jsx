@@ -15,7 +15,7 @@ const MessageContainer = () => {
 	// }, [setSelectedConversation]);
 
 	return (
-		<div className="flex flex-col h-full w-full">
+		<div className="flex flex-col h-screen w-full ">
 			{!selectedConversation ? (
 				<Home />
 			) : (
@@ -27,9 +27,9 @@ const MessageContainer = () => {
 					</div>
 
 					{/* Messages - scrollable area */}
-					<div className="flex-grow overflow-y-auto">
+					
 						<Messages />
-					</div>
+					
 
 					{/* Message Input - fixed at the bottom */}
 					<div className="sticky bottom-0 bg-white w-full z-10">
