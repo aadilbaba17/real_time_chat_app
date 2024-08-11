@@ -70,8 +70,10 @@ await signup(inputs);
                     <button className='btn btn-block btn-sm mt-2'>Sign Up</button>
                 </div>
                 </form>
+                <p className='text-center text-sm mt-4 align-center justify-center text-gray-700 font-semibold'>Developed by Aadil baba</p>
 
         </div>
+      
     </div>
   )
 }
