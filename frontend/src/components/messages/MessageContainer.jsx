@@ -15,13 +15,13 @@ const MessageContainer = () => {
 	// }, [setSelectedConversation]);
 
 	return (
-		<div>
+		<div className="w-full">
 			{!selectedConversation ? (
 				<Home />
 			) : (
 				<>
 					{/* Header */}
-					<div className='bg-slate-500 px-4 py-2 mb-2'>
+					<div className='bg-slate-500 px-4 py-2 mb-2 mt-5 w-full'>
 						<span className='label-text'>To:</span>{" "}
 						<span className='text-gray-900 font-bold'>{selectedConversation.fullName}</span>
 					</div>
