@@ -4,6 +4,7 @@ import MessageInput from "./MessageInput";
 import Messages from "./Messages";
 import { TiMessages } from "react-icons/ti";
 import { useAuthContext } from "../../context/AuthContext";
+import Home from "../../pages/home/Home";
 
 const MessageContainer = () => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
@@ -16,7 +17,7 @@ const MessageContainer = () => {
 	return (
 		<div className=' flex flex-col bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
 			{!selectedConversation ? (
-				<NoChatSelected />
+				<Home />
 			) : (
 				<>
 					{/* Header */}
