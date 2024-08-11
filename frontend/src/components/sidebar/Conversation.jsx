@@ -1,8 +1,9 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useSocketContext } from "../../context/SocketContext";
 import useConversation from "../../zustand/useConversation";
 
 const Conversation = ({ conversation, lastIdx, emoji }) => {
+	const navigate = useNavigate();
 	const { selectedConversation, setSelectedConversation } = useConversation();
 
 	const isSelected = selectedConversation?._id === conversation._id;
@@ -16,8 +17,7 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 				${isSelected ? "bg-sky-500" : ""}
 			`}
 				onClick={() => {setSelectedConversation(conversation)
-
-					Navigate("/convo")
+							navigate('/convo')
 				}}
 			>
 				<div className={`avatar ${isOnline ? "online" : ""}`}>
