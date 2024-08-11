@@ -8,7 +8,7 @@ export const signup= async(req,res) => {
         if(password !== confirmPassword){
             return res.status(400).json({error:"passwords don't match"})
         }
-        const user = await User.findOne({username})
+        const user = await User.findOne({username});
 
         if(user){
             return res.status(400).json({error:"user already exits"})
