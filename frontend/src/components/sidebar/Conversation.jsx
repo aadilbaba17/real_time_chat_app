@@ -32,7 +32,10 @@ const Conversation = ({ conversation, lastIdx, emoji }) => {
 
 				<div className='flex flex-col flex-1'>
 					<div className='flex gap-3 justify-between'>
+						<div className="flex flex-col">
 						<p className='font-bold text-gray-200'>{conversation.fullName}</p>
+						{isOnline &&<span className='text-sm text-green-800 font-bold'>online</span>}
+						</div>
 						<span className='text-xl'>{emoji}</span>
 					</div>
 				</div>
