@@ -21,17 +21,26 @@ const MessageContainer = () => {
 			) : (
 				<>
 					{/* Header */}
-					<div className="bg-slate-500 px-4 py-2 mb-2 mt-5 w-full sticky top-0 z-10">
-						<span className="label-text">To:</span>{" "}
-						<span className="text-gray-900 font-bold">{selectedConversation.fullName}</span>
-					</div>
+					<div className="bg-yellow-400 px-2 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0 py-2 mb-2 mt-4 w-full sticky top-0 z-10 flex items-center shadow">
+  <div className="mr-3">
+    <img
+      src={selectedConversation.profilePic} 
+      alt="Avatar"
+      className="w-10 h-10 rounded-full border-2 border-black"
+    />
+  </div>
+  <div className="flex flex-col">
 
-					{/* Messages - scrollable area */}
+    <span className="text-white font-bold text-base">{selectedConversation.fullName}</span>
+  </div>
+</div>
+
+					
 					
 						<Messages />
 					
 
-					{/* Message Input - fixed at the bottom */}
+					
 					<div className="sticky bottom-0  w-full z-10">
 						<MessageInput />
 					</div>
