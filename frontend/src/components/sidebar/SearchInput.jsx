@@ -27,7 +27,11 @@ const SearchInput = () => {
 	};
 	return (
 		<div className="flex items-center   justify-between ">
-			
+	<div className="flex flex-col justify-center items-center max-w-[50px]">
+  <img className="w-10 h-10 rounded-full border-2 border-black" src={authUser.profilePic} alt="profile" />
+  <p className="text-white font-semibold text-ellipsis overflow-hidden whitespace-nowrap">{authUser.username}</p>
+</div>
+
 		<form onSubmit={handleSubmit} className='flex items-center gap-2'>
 		
 			<input
@@ -37,14 +41,11 @@ const SearchInput = () => {
 				value={search}
 				onChange={(e) => setSearch(e.target.value)}
 			/>
-			<button type='submit' className='btn btn-circle bg-sky-500 text-white'>
+			<button type='submit' className='btn btn-circle w-12 bg-sky-500 text-white'>
 				<IoSearchSharp className='w-6 h-6 outline-none' />
 			</button>
 		</form>
-		<div className="flex flex-col justify-center align-center items-center">
-			<img className="w-10 h-10 rounded-full border-2 border-black" src={authUser.profilePic} alt='profile'/>
-			<p className="text-white font-semibold">{authUser.username}</p>
-			</div>
+		
 	</div>
 	);
 };
