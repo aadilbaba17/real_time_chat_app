@@ -27,7 +27,7 @@ await signup(inputs);
         backdrop-blur-lg bg-opacity-0
         '>
               <h1 className='text-3xl font-semibold text-center text-gray-300'>Sign Up
-            <span className='text-blue-500'>  AB-17 Chat App</span>
+            {/* <span className='text-blue-500'>  AB-17 Chat App</span> */}
 
             </h1>
             <form onSubmit={handleSubmit}>
