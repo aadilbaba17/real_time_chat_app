@@ -24,7 +24,7 @@ const MessageContainer = () => {
 			) : (
 				<>
 					{/* Header */}
-					<div className="bg-yellow-400 px-2 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0 py-2 mb-2 mt-4 w-full sticky top-0 z-10 flex items-center shadow">
+					<div className="bg-yellow-400 overflow-hidden px-2 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0 py-2 mb-2 mt-4 w-full sticky top-0 z-10 flex items-center shadow">
   <div className="mr-3">
     <img
       src={selectedConversation.profilePic} 
