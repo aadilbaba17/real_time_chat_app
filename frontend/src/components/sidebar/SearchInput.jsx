@@ -29,7 +29,7 @@ const SearchInput = () => {
 		<div className="flex items-center   justify-between ">
 	<div className="flex flex-col justify-center items-center max-w-[50px]">
   <img className="w-10 h-10 rounded-full border-2 border-black" src={authUser.profilePic} alt="profile" />
-  <p className="text-white font-semibold text-ellipsis overflow-hidden whitespace-nowrap">{authUser.username}</p>
+  <p className="text-white font-semibold truncate">{authUser.username}</p>
 </div>
 
 		<form onSubmit={handleSubmit} className='flex items-center gap-2'>
