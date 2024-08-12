@@ -5,9 +5,12 @@ import Messages from "./Messages";
 import { TiMessages } from "react-icons/ti";
 import { useAuthContext } from "../../context/AuthContext";
 import Home from "../../pages/home/Home";
+import { useSocketContext } from "../../context/SocketContext";
 
 const MessageContainer = () => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
+	const { onlineUsers } = useSocketContext();
+	const isOnline = onlineUsers.includes(selectedConversation._id);
 
 	// Uncomment this if you need to clean up when unmounting
 	// useEffect(() => {
@@ -32,6 +35,7 @@ const MessageContainer = () => {
   <div className="flex flex-col">
 
     <span className="text-white font-bold text-base">{selectedConversation.fullName}</span>
+	{isOnline && <div className="text-green-500 text-sm font-semibold " >online</div>}
   </div>
 </div>
 
