@@ -12,7 +12,7 @@ function App() {
   const {authUser}= useAuthContext()
 
   return (
-    <div className='py-4 h-screen  overflow-hidden flex items-center justify-center'>
+    <>
  <Routes>
   <Route path='/' element={authUser?<Home/>: <Navigate to={'/login'}/>}/>
   <Route path='/convo' element={authUser?<Chat/>: <Navigate to={'/login'}/>}/>
@@ -20,7 +20,8 @@ function App() {
   <Route path='/signup' element={authUser?<Navigate to={'/'}/>:<SignUp/>}/>
  </Routes> 
  <Toaster/>
-    </div>
+ </>
+
   )
 }
 

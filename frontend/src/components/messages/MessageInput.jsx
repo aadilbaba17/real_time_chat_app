@@ -19,7 +19,7 @@ const MessageInput = () => {
 			<div className="relative flex items-center rounded-full bg-gray-100 p-2">
 				<input
 					type="text"
-					className="flex-1 p-2 bg-transparent outline-none text-black placeholder-gray-500"
+					className="input input-bordered rounded-full flex-1 placeholder-gray-500"
 					placeholder="Type a message"
 					value={message}
 					onChange={(e) => setMessage(e.target.value)}
