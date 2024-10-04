@@ -9,7 +9,7 @@ const SearchInput = () => {
 	const [search, setSearch] = useState("");
 	const { setSelectedConversation } = useConversation();
 	const { conversations } = useGetConversations();
-	const {authUser}=useAuthContext()
+	const { authUser } = useAuthContext();
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -19,34 +19,35 @@ const SearchInput = () => {
 		}
 
 		const conversation = conversations.find((c) => c.fullName.toLowerCase().includes(search.toLowerCase()));
-
 		if (conversation) {
 			setSelectedConversation(conversation);
 			setSearch("");
-		} else toast.error("No such user found!");
+		} else {
+			toast.error("No such user found!");
+		}
 	};
-	return (
-		<div className="flex items-center   justify-between ">
-	<div className="flex flex-col justify-center items-center max-w-[50px]">
-  <img className="w-10 h-10 rounded-full border-2 border-black" src={authUser.profilePic} alt="profile" />
-  <p className="text-white font-semibold truncate">{authUser.username}</p>
-</div>
 
-		<form onSubmit={handleSubmit} className='flex items-center gap-2'>
-		
-			<input
-				type='text'
-				placeholder='Search…'
-				className='input input-bordered rounded-full'
-				value={search}
-				onChange={(e) => setSearch(e.target.value)}
-			/>
-			<button type='submit' className='btn btn-circle w-12 bg-sky-500 text-white'>
-				<IoSearchSharp className='w-6 h-6 outline-none' />
-			</button>
-		</form>
-		
-	</div>
+	return (
+		<div className="flex items-center mb-4">
+			<div className="flex items-center mr-2">
+				<img className="w-10 h-10 rounded-full border-2 border-black" src={authUser.profilePic} alt="profile" />
+				<p className="text-gray-800 font-semibold truncate">{authUser.username}</p>
+			</div>
+
+			<form onSubmit={handleSubmit} className='flex flex-1 items-center gap-2'>
+				<input
+					type='text'
+					placeholder='Search…'
+					className='input input-bordered rounded-full flex-1'
+					value={search}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
+				<button type='submit' className='btn btn-circle bg-green-500 text-white'>
+					<IoSearchSharp className='w-6 h-6 outline-none' />
+				</button>
+			</form>
+		</div>
 	);
 };
+
 export default SearchInput;

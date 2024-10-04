@@ -1,20 +1,23 @@
-import React from 'react'
-import SearchInput from './SearchInput'
-import Conversations from './Conversations'
-import LogoutButton from './LogoutButton'
+import React from 'react';
+import SearchInput from './SearchInput';
+import Conversations from './Conversations';
+import LogoutButton from './LogoutButton';
 
 const Sidebar = () => {
   return (
-    <div className='border-r border-slate-500 p-4 mt-5 h-full w-full flex flex-col  overflow-hidden'>
+    <div className='bg-white border-r border-gray-200 p-4 h-full w-full flex flex-col overflow-hidden'>
+      <div className="flex items-center mb-4">
+        <h2 className="text-2xl font-bold text-gray-800">Chats</h2>
+        <LogoutButton />
+      </div>
 
-<SearchInput/>
-        <div className='divider px-3'></div>
+      <SearchInput />
+      <div className='divider my-2' />
 
-        <Conversations/>
-        <LogoutButton/>
-        <p className='text-center text-sm mt-2 mb-2 align-center justify-center text-gray-700 font-semibold'>Developed by Aadil baba</p>
+      <Conversations />
+      <p className='text-center text-xs mt-2 mb-2 text-gray-500'>Developed by Aadil Baba</p>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
