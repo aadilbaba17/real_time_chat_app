@@ -31,7 +31,7 @@ const SearchInput = () => {
 		<div className="flex items-center mb-4">
 			<div className="flex items-center mr-2">
 				<img className="w-10 h-10 rounded-full border-2 border-black" src={authUser.profilePic} alt="profile" />
-				<p className="text-gray-800 font-semibold truncate">{authUser.username}</p>
+				
 			</div>
 
 			<form onSubmit={handleSubmit} className='flex flex-1 items-center gap-2'>
