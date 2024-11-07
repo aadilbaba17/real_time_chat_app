@@ -6,28 +6,37 @@ import notificationSound from "../assets/sounds/notification.mp3";
 
 const useListenMessages = () => {
     const { socket } = useSocketContext();
-    const { selectedConversation, messages, setMessages, setTypingStatus } = useConversation();
+    const { selectedConversation, setMessages, setTypingStatus } = useConversation();
 
     useEffect(() => {
         const handleNewMessage = (newMessage) => {
             if (selectedConversation?._id === newMessage?.conversationId) {
-                // Check for duplicates by ID (assuming messages have unique IDs)
-                if (!messages.some(message => message._id === newMessage._id)) {
-                    setMessages((prevMessages) => [...prevMessages, newMessage]);
-                }
+                setMessages((prevMessages) => {
+                    // Ensure the message isn't already present to avoid duplicates
+                    const isMessageAlreadyPresent = prevMessages.some(message => message._id === newMessage._id);
+                    if (!isMessageAlreadyPresent) {
+                        return [...prevMessages, newMessage];
+                    }
+                    return prevMessages;
+                });
+
+                // Play notification sound
                 const sound = new Audio(notificationSound);
                 sound.play();
             }
         };
 
+        // Listen for new incoming messages
         socket?.on("newMessage", handleNewMessage);
 
+        // Listen for typing events
         socket?.on("typing", (data) => {
             if (selectedConversation?._id === data.conversationId) {
                 setTypingStatus(true);
             }
         });
 
+        // Listen for stop typing events
         socket?.on("stopTyping", (data) => {
             if (selectedConversation?._id === data.conversationId) {
                 setTypingStatus(false);
@@ -39,9 +48,9 @@ const useListenMessages = () => {
             socket?.off("typing");
             socket?.off("stopTyping");
         };
-    }, [socket, selectedConversation, setMessages, setTypingStatus, messages]);
+    }, [socket, selectedConversation, setMessages, setTypingStatus]);
 
-    return null; // Optional, as this is just a hook
+    return null;
 };
 
 export default useListenMessages;

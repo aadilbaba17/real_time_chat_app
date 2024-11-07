@@ -19,7 +19,7 @@ const MessageInput = () => {
             clearTimeout(typingTimeout);
             typingTimeout = setTimeout(() => {
                 socket.emit("stopTyping", { conversationId: selectedConversation._id });
-            }, 2000); // 2 seconds delay to indicate user stopped typing
+            }, 2000); 
         }
     };
 

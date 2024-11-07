@@ -8,7 +8,7 @@ import { useSocketContext } from "../../context/SocketContext";
 import Home from "../../pages/home/Home";
 
 const MessageContainer = () => {
-    const { selectedConversation, typingStatus } = useConversation();
+    const { selectedConversation, typingStatus,setSelectedConversation } = useConversation();
     const { onlineUsers } = useSocketContext();
     const isOnline = selectedConversation && onlineUsers.includes(selectedConversation._id);
     const navigate = useNavigate();
