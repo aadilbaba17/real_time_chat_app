@@ -62,7 +62,7 @@ socket.on("sendMessage", (message) => {
 
 socket.on("newMessage", (message) => {
 	// Emit the message along with the replyTo reference
-	io.to(receiverSocketId).emit("newMessage", {
+	io.to(getReceiverSocketId()).emit("newMessage", {
 		...message,
 		replyTo: message.replyTo, // Include the replyTo reference if it's a reply
 	});
