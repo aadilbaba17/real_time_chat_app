@@ -11,27 +11,15 @@ const useListenMessages = () => {
 	const {selectedConversation, messages, setMessages } = useConversation();
 
 	useEffect(() => {
-		// Listen for new messages from the socket server
 		socket?.on("newMessage", (newMessage) => {
-			// Play notification sound for new message
+			newMessage.shouldShake = true;
 			const sound = new Audio(notificationSound);
 			sound.play();
-
-			// If the new message is from the selected conversation
-			if (selectedConversation?._id === newMessage?.senderId || selectedConversation?._id === newMessage?.receiverId) {
-				// Check if the message already exists in the messages list
-				const messageExists = messages.some((msg) => msg._id === newMessage._id);
-				
-				// If the message does not already exist, add it to the messages state
-				if (!messageExists) {
-					// Update the messages list with the new message (preserving previous messages)
-					setMessages((prevMessages) => [...prevMessages, newMessage]);
-				}
-			}
+			if( selectedConversation?._id == newMessage?.senderId){
+				setMessages((prevMessages) => [...prevMessages, newMessage]);}
 		});
 
-		// Clean up the socket listener on component unmount or when dependencies change
 		return () => socket?.off("newMessage");
-	}, [socket, selectedConversation, messages, setMessages]);
+	}, [socket, setMessages, messages]);
 };
 export default useListenMessages;
