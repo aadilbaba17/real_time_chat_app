@@ -9,15 +9,18 @@ const useListenMessages = () => {
     const { selectedConversation, messages, setMessages, setTypingStatus } = useConversation();
 
     useEffect(() => {
-        socket?.on("newMessage", (newMessage) => {
-            newMessage.shouldShake = true;
-            const sound = new Audio(notificationSound);
-            sound.play();
-
-            if (selectedConversation?._id === newMessage?.senderId) {
-                setMessages([...messages, newMessage]);
+        const handleNewMessage = (newMessage) => {
+            if (selectedConversation?._id === newMessage?.conversationId) {
+                // Check for duplicates by ID (assuming messages have unique IDs)
+                if (!messages.some(message => message._id === newMessage._id)) {
+                    setMessages((prevMessages) => [...prevMessages, newMessage]);
+                }
+                const sound = new Audio(notificationSound);
+                sound.play();
             }
-        });
+        };
+
+        socket?.on("newMessage", handleNewMessage);
 
         socket?.on("typing", (data) => {
             if (selectedConversation?._id === data.conversationId) {
@@ -32,11 +35,13 @@ const useListenMessages = () => {
         });
 
         return () => {
-            socket?.off("newMessage");
+            socket?.off("newMessage", handleNewMessage);
             socket?.off("typing");
             socket?.off("stopTyping");
         };
-    }, [socket, setMessages, messages, selectedConversation, setTypingStatus]);
+    }, [socket, selectedConversation, setMessages, setTypingStatus, messages]);
+
+    return null; // Optional, as this is just a hook
 };
 
 export default useListenMessages;
