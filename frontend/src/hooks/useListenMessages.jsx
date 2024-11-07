@@ -16,7 +16,12 @@ const useListenMessages = () => {
 			const sound = new Audio(notificationSound);
 			sound.play();
 			if( selectedConversation?._id == newMessage?.senderId ||selectedConversation?._id == newMessage?.recieverId){
-			setMessages([...messages, newMessage]);}
+				const messageExists = messages.some((msg) => msg._id === newMessage._id);
+          
+				if (!messageExists) {
+				  // Append the new message to the messages array
+				  setMessages([...messages, newMessage]);
+				};}
 		});
 
 		return () => socket?.off("newMessage");
