@@ -4,7 +4,7 @@ import useConversation from "../../zustand/useConversation";
 
 const Message = ({ message, handleReply }) => {
 	const { authUser } = useAuthContext();
-	const { selectedConversation, replyTo } = useConversation(); // Get the replyTo state from Zustand
+	const { selectedConversation, replyTo } = useConversation(); // Get the reply context from Zustand store
 	const fromMe = message.senderId === authUser._id;
 	const bubbleColor = fromMe ? "bg-green-400" : "bg-gray-200";
 	const textColor = fromMe ? "text-white" : "text-black";
@@ -12,7 +12,7 @@ const Message = ({ message, handleReply }) => {
 
 	// When a message is clicked, trigger the handleReply function to set it as the reply context
 	const handleClick = () => {
-		handleReply(message);
+		handleReply(message); // Set this message as the reply context
 	};
 
 	return (

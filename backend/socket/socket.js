@@ -60,6 +60,15 @@ socket.on("sendMessage", (message) => {
 	io.emit("newMessage", newMessage);
 });
 
+socket.on("newMessage", (message) => {
+	// Emit the message along with the replyTo reference
+	io.to(receiverSocketId).emit("newMessage", {
+		...message,
+		replyTo: message.replyTo, // Include the replyTo reference if it's a reply
+	});
+});
+
+
     // Join specific conversation rooms if needed
     socket.on("joinConversation", (conversationId) => {
         socket.join(conversationId);
