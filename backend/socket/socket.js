@@ -45,6 +45,20 @@ io.on("connection", (socket) => {
             userId,
         });
     });
+// On the server, when a message is received
+socket.on("sendMessage", (message) => {
+	const { text, conversationId, replyTo } = message; // replyTo can be null if it's not a reply
+
+	const newMessage = {
+		text,
+		conversationId,
+		replyTo, // Include the reply context
+		senderId: socket.id, // The sender's ID
+	};
+
+	// Emit the new message
+	io.emit("newMessage", newMessage);
+});
 
     // Join specific conversation rooms if needed
     socket.on("joinConversation", (conversationId) => {
