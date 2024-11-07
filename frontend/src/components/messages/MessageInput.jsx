@@ -70,17 +70,15 @@ const MessageInput = () => {
         />
 
         {/* Camera Icon for file upload */}
-        <input
+		<input
           type="file"
           className="hidden"
           id="file-upload"
           accept="image/*" // Allow only images to be uploaded
           onChange={handleFileChange}
         />
-        <label htmlFor="file-upload">
-          <button type="button" className="p-2 text-blue-600">
-            <BsCamera size={20} />
-          </button>
+        <label htmlFor="file-upload" className="p-2 text-blue-600 cursor-pointer">
+          <BsCamera size={20} />
         </label>
 
         {/* Mic or Send Icon */}
