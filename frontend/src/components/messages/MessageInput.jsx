@@ -15,11 +15,11 @@ const MessageInput = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "a66vulhq"); // Replace with your Cloudinary upload preset
+    formData.append("upload_preset", "a66vulhq");
 
 
     try {
-      const response = await axios.post("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", formData);
+      const response = await axios.post("https://api.cloudinary.com/v1_1/dgzfsajhb/image/upload", formData);
       return response.data.secure_url;  // URL of the uploaded image from Cloudinary
     } catch (error) {
       console.error("Error uploading image to Cloudinary", error);
