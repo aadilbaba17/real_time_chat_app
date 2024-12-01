@@ -5,37 +5,40 @@ import useConversation from "../../zustand/useConversation";
 import { useState } from "react";
 
 // Function to check if the message is a valid Cloudinary URL
-
 const Message = ({ message, onSelectMessage }) => {
   const { authUser } = useAuthContext();
   const [swipeX, setSwipeX] = useState(0);
   const { selectedConversation } = useConversation();
+  const [swipeThreshold] = useState(50); // Set minimum swipe distance for action (in pixels)
+  
   const fromMe = message.senderId === authUser._id;
   const bubbleColor = fromMe ? "bg-orange-400" : "bg-gray-200";
   const textColor = fromMe ? "text-white" : "text-black";
   const profilePic = fromMe ? authUser.profilePic : selectedConversation?.profilePic;
+
   const isCloudinaryUrl = (url) => {
     const cloudinaryRegex = /^https:\/\/res\.cloudinary\.com\/[a-zA-Z0-9_]+\/image\/upload\/.*\.(jpg|jpeg|png|gif|webp|bmp|tiff|svg)$/;
     return cloudinaryRegex.test(url);
   };
-  // Swipe handling
-   // State to track swipe movement
 
-  // Swipe handling (left swipe to select the message)
+  // Swipe handling logic
   const handlers = useSwipeable({
     onSwiping: (e) => {
       // Update swipe position based on user's swipe movement
-      setSwipeX(e.deltaX);
+      if (Math.abs(e.deltaX) >= swipeThreshold) {
+        setSwipeX(e.deltaX);
+      }
     },
     onSwipedLeft: () => {
       // Handle left swipe (when swipe goes left)
-     
-      setSwipeX(0); // Reset the swipe position when finished
+      setSwipeX(0); // Reset swipe position when finished
     },
     onSwipedRight: () => {
-      onSelectMessage(message);
-      // Handle right swipe (reset swipe to original position)
-      setSwipeX(0);
+      // Handle right swipe (select conversation when swipe goes right)
+      if (Math.abs(swipeX) >= swipeThreshold) {
+        onSelectMessage(message); // Select the message (or conversation)
+      }
+      setSwipeX(0); // Reset swipe position after selection
     },
     preventDefaultTouchmoveEvent: true, // Prevent default behavior like scrolling
     trackMouse: true, // Allow mouse swipe simulation (for testing on desktop)
@@ -53,7 +56,6 @@ const Message = ({ message, onSelectMessage }) => {
       {...handlers} // Add swipeable handlers
       style={messageStyle} // Apply the swiping transformation
     >
-    
       {!fromMe && (
         <img
           className="w-8 h-8 rounded-full mr-2"
@@ -61,7 +63,15 @@ const Message = ({ message, onSelectMessage }) => {
           alt="Profile Pic"
         />
       )}
+
       <div className={`p-2 rounded-lg max-w-xs ${bubbleColor} ${textColor}`}>
+        {message.parent && (
+          <div className="w-[100%] text-ellipsis overflow-hidden mb-2 bg-gray-200 p-2 rounded-md text-sm text-gray-600 border-l-4 border-blue-400">
+            <strong>In reply to:</strong>
+            <div className="mt-1 text-ellipsis overflow-hidden whitespace-nowrap">{message.parent}</div>
+          </div>
+        )}
+        
         {isCloudinaryUrl(message.message) ? (
           <img
             src={message.message}
@@ -69,18 +79,13 @@ const Message = ({ message, onSelectMessage }) => {
             className="w-40 h-40 object-cover rounded-md"
           />
         ) : (
-          <div>
-     {message.parent && (
-        <div className="w-[100%] text-ellipsis overflow-hidden mb-2 bg-gray-200 p-2 rounded-md text-sm text-gray-600 border-l-4 border-blue-400">
-          <strong>In reply to:</strong>
-          <div className="className=mt-1 text-ellipsis overflow-hidden whitespace-nowrap">{message.parent}</div>
-        </div>
-      )}
-            {message.message}</div>
+          <div>{message.message}</div>
         )}
+
         <div className="text-xs text-right mt-1">{extractTime(message.createdAt)}</div>
       </div>
     </div>
   );
 };
-export default Message
+
+export default Message;
