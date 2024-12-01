@@ -1,5 +1,5 @@
 // MessageContainer.js
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useConversation from "../../zustand/useConversation";
 import MessageInput from "./MessageInput";
 import Messages from "./Messages";
@@ -12,9 +12,16 @@ import { useNavigate } from "react-router-dom"; // Import navigate for navigatio
 const MessageContainer = () => {
 	const { selectedConversation, setSelectedConversation } = useConversation();
 	const { onlineUsers } = useSocketContext();
+	const [selectedMessage, setSelectedMessage] = useState(null);
+	const [inputText, setInputText] = useState(""); 
 	const isOnline = selectedConversation && onlineUsers.includes(selectedConversation._id);
-	const navigate = useNavigate(); // Initialize navigate
-
+	const navigate = useNavigate(); 
+	// Initialize navigate
+	const handleSelectMessage = (message) => {
+		setSelectedMessage(message);
+		console.log(message);
+		setInputText(message.message); // Set the input text to the selected message
+	  };
 	const handleBack = () => {
 		// Reset the selected conversation
 		setSelectedConversation(null);
@@ -29,7 +36,7 @@ const MessageContainer = () => {
 			) : (
 				<>
 					{/* Header */}
-					<div className="bg-green-400 px-4 py-2 flex items-center shadow-lg sticky top-0 z-10">
+					<div className="bg-orange-600 mx-2 mt-1 rounded-2xl px-4 py-2 flex items-center shadow-lg sticky top-0 z-10">
 						{/* Back Icon */}
 						<IoArrowBack 
 							className="text-white cursor-pointer" 
@@ -46,9 +53,11 @@ const MessageContainer = () => {
 							{isOnline && <span className="text-white text-xs">Online</span>}
 						</div>
 					</div>
-					<Messages />
+					<Messages handleSelectMessage={handleSelectMessage}/>
 					<div className="sticky bottom-0 w-full z-10">
-						<MessageInput />
+						<MessageInput selectedMessage={selectedMessage}  setSelectedMessage={setSelectedMessage}
+						receiverId={selectedConversation._id} name={selectedConversation.fullName}
+						/>
 					</div>
 				</>
 			)}

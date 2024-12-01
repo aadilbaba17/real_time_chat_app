@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BsMic, BsSend, BsCamera } from "react-icons/bs";
 import useSendMessage from "../../hooks/useSendMessage";
-import axios from "axios"; // Assuming you use axios for uploading to Cloudinary
+import axios from "axios";
+import { BsX } from 'react-icons/bs';
+import { useSocketContext } from "../../context/SocketContext";
+import { FaLaughBeam } from "react-icons/fa";
 
-const MessageInput = () => {
+
+const MessageInput = ({ selectedMessage, setSelectedMessage, receiverId,name }) => {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [imagePreview, setImagePreview] = useState(null); // State to store image preview
-  const { sendMessage } = useSendMessage(); // Assuming useSendMessage handles sending the message to your backend
-
+  const [imagePreview, setImagePreview] = useState(null);
+  const [isReceiverTyping, setIsReceiverTyping] = useState(false); // Track if the receiver is typing
+  const { sendMessage } = useSendMessage();
+  const { socket } = useSocketContext();
   // Cloudinary image upload function
   const handleImageUpload = async (file) => {
     setLoading(true);
@@ -17,10 +22,12 @@ const MessageInput = () => {
     formData.append("file", file);
     formData.append("upload_preset", "a66vulhq");
 
-
     try {
-      const response = await axios.post("https://api.cloudinary.com/v1_1/dgzfsajhb/image/upload", formData);
-      return response.data.secure_url;  // URL of the uploaded image from Cloudinary
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dgzfsajhb/image/upload",
+        formData
+      );
+      return response.data.secure_url; // URL of the uploaded image from Cloudinary
     } catch (error) {
       console.error("Error uploading image to Cloudinary", error);
       return null;
@@ -41,6 +48,29 @@ const MessageInput = () => {
     }
   };
 
+  // Handle "typing" events from the server
+  useEffect(() => {
+    socket?.on("typing", (senderId) => {
+      if (senderId === receiverId) {
+        setIsReceiverTyping(true);
+        setTimeout(() => setIsReceiverTyping(false), 5000);
+      }
+    });
+
+    return () => {
+      socket?.off("typing");
+    };
+  }, [socket, receiverId]);
+
+  // Handle local typing and emit event to the server
+  const handleTyping = (e) => {
+    setMessage(e.target.value);
+
+    if (e.target.value) {
+      socket?.emit("typing", receiverId); // Emit typing event only if there’s input
+    }
+  };
+
   // Handle message submit
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,58 +78,86 @@ const MessageInput = () => {
 
     let imageUrl = null;
     if (file) {
-      imageUrl = await handleImageUpload(file); // Upload image and get URL
+      imageUrl = await handleImageUpload(file);
     }
 
-    // Send the message (either text or URL) to the backend
-    await sendMessage(imageUrl || message); // Send URL as the message
-    setMessage(""); // Clear message input
-    setFile(null); // Clear file input
-    setImagePreview(null); // Clear image preview
+    await sendMessage(imageUrl || message, selectedMessage?.message);
+
+    setMessage("");
+    setSelectedMessage(null);
+    setFile(null);
+    setImagePreview(null);
   };
 
   return (
-    <form className="p-2" onSubmit={handleSubmit}>
-      <div className="relative flex items-center rounded-full bg-gray-100 p-2">
-        <input
-          type="text"
-          className="input input-bordered rounded-full flex-1 placeholder-gray-500"
-          placeholder="Type a message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-
-        {/* Camera Icon for file upload */}
-		<input
-          type="file"
-          className="hidden"
-          id="file-upload"
-          accept="image/*" // Allow only images to be uploaded
-          onChange={handleFileChange}
-        />
-        <label htmlFor="file-upload" className="p-2 text-blue-600 cursor-pointer">
-          <BsCamera size={20} />
-        </label>
-
-        {/* Mic or Send Icon */}
-        <button type="submit" className="p-2 text-green-600">
-          {loading ? (
-            <div className="loading loading-spinner"></div>
-          ) : message || file ? (
-            <BsSend size={20} />
-          ) : (
-            <BsMic size={20} />
-          )}
-        </button>
-      </div>
-
-      {/* Image preview section */}
-      {imagePreview && (
-        <div className="mt-2">
-          <img src={imagePreview} alt="Image preview" className="max-w-full h-auto rounded-md" />
+    <form className="p-2 relative" onSubmit={handleSubmit}>
+  {selectedMessage && (
+        <div className="bg-slate-400 w-[88%] p-2 rounded-md ml-2  text-gray-800 relative">
+          <button
+            onClick={() => setSelectedMessage(null)}
+            className="absolute top-1 right-1 p-1 bg-white rounded-full text-gray-600 hover:text-gray-900"
+          >
+            <BsX size={20} />
+          </button>
+          <p>{selectedMessage?.message}</p>
         </div>
       )}
-    </form>
+
+    {/* Typing indicator */}
+    {isReceiverTyping && (
+  <div className="absolute -top-6 flex items-center space-x-2">
+    <div className="text-yellow-400 text-3xl animate-bounce">
+      <FaLaughBeam />
+    </div>
+    <div className="flex space-x-1 items-center">
+      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse delay-20"></div>
+      <div className="w-4 h-4 bg-green-600 rounded-full animate-pulse delay-40"></div>
+    </div>
+    <div className="text-sm text-green-600 ml-2">{name} is Typing...</div>
+  </div>
+)}
+
+    <div className="relative flex items-center rounded-full bg-gray-100 p-2">
+      <input
+        type="text"
+        className="input input-bordered text-[#333] bg-slate-200 rounded-full flex-1 w-[80%] placeholder-gray-800"
+        placeholder="Type a message"
+        value={message}
+        onChange={handleTyping}
+      />
+
+      {/* Camera Icon for file upload */}
+      <input
+        type="file"
+        className="hidden"
+        id="file-upload"
+        accept="image/*"
+        onChange={handleFileChange}
+      />
+      <label htmlFor="file-upload" className="p-2 text-blue-600 cursor-pointer">
+        <BsCamera size={20} />
+      </label>
+
+      {/* Mic or Send Icon */}
+      <button type="submit" className="p-2 text-green-600">
+        {loading ? (
+          <div className="loading loading-spinner"></div>
+        ) : message || file ? (
+          <BsSend size={25} />
+        ) : (
+          <BsMic size={20} />
+        )}
+      </button>
+    </div>
+
+    {/* Image preview section */}
+    {imagePreview && (
+      <div className="mt-2">
+        <img src={imagePreview} alt="Image preview" className="max-w-full h-auto rounded-md" />
+      </div>
+    )}
+  </form>
   );
 };
 

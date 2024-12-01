@@ -4,7 +4,7 @@ import { getReceiverSocketId, io } from "../socket/socket.js";
 
 export const sendMessage = async (req,res)=>{
     try {
-       const {message } = req.body;
+       const {message,parent } = req.body;
        const {id:recieverId} = req.params;
        const senderId =req.user._id;
       
@@ -19,7 +19,8 @@ export const sendMessage = async (req,res)=>{
    const newMessage = new Message({
     senderId,
     recieverId,
-    message
+    message,
+    parent
    })
 
    if(newMessage){
@@ -31,8 +32,9 @@ export const sendMessage = async (req,res)=>{
    const receiverSocketId = getReceiverSocketId(recieverId);
 		if (receiverSocketId) {
 			// io.to(<socket_id>).emit() used to send events to specific client
-			io.to(receiverSocketId).emit("newMessage", newMessage);
+			 io.to(receiverSocketId).emit("newMessage", newMessage);
 		}
+     
    return res.status(201).json(newMessage);
 
     } catch (error) {

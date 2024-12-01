@@ -18,6 +18,13 @@ export const getReceiverSocketId = (receiverId) => {
 
 const userSocketMap = {}; // {userId: socketId}
 
+const sendTypingStatus = (senderId, receiverId) => {
+	const receiverSocketId = getReceiverSocketId(receiverId);
+	if (receiverSocketId) {
+	  io.to(receiverSocketId).emit("typing", senderId); 
+	}
+  };
+
 io.on("connection", (socket) => {
 	console.log("a user connected", socket.id);
 
@@ -26,7 +33,9 @@ io.on("connection", (socket) => {
 
 	// io.emit() is used to send events to all the connected clients
 	io.emit("getOnlineUsers", Object.keys(userSocketMap));
-
+	socket.on("typing", (receiverId) => {
+		sendTypingStatus(userId, receiverId); // Emit typing event to the other user
+	  });
 	// socket.on() is used to listen to the events. can be used both on client and server side
 	socket.on("disconnect", () => {
 		console.log("user disconnected", socket.id);

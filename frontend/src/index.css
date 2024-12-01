@@ -35,6 +35,41 @@ body{
 	perspective: 1000px;
 }
 
+@keyframes bounce {
+	0%, 100% {
+	  transform: translateY(0);
+	}
+	50% {
+	  transform: translateY(-5px);
+	}
+  }
+  
+  @keyframes pulse {
+	0%, 100% {
+	  opacity: 0.5;
+	}
+	50% {
+	  opacity: 1;
+	}
+  }
+  
+  .animate-bounce {
+	animation: bounce 1s infinite;
+  }
+  
+  .animate-pulse {
+	animation: pulse 1.2s infinite;
+  }
+  
+  .delay-20 {
+	animation-delay: 0.25s;
+  }
+  
+  .delay-40 {
+	animation-delay: 0.5s;
+  }
+  
+
 @keyframes shake {
 	10%,
 	90% {
