@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BsMic, BsSend, BsCamera, BsEmojiSmile } from "react-icons/bs";
+import { BsMic, BsSend, BsCamera, BsEmojiSmile, BsX } from "react-icons/bs";
 import { FaLaughBeam } from "react-icons/fa";
 import useSendMessage from "../../hooks/useSendMessage";
 import axios from "axios";
